@@ -36,7 +36,7 @@ variables:
   # CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:v1.0.$CI_PIPELINE_IID
   # CI_REGISTRY_IMAGE: $CI_REGISTRY/shoppie_ms/shoppie-auth-service
   # CI_REGISTRY_USER: samrat
-  # CI_REGISTRY_PASSWORD: Abcd1234.
+  # CI_REGISTRY_PASSWORD: Abcd1234. 
 
 release-job:
   tags:
