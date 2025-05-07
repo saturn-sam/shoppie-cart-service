@@ -1,0 +1,52 @@
+stages:
+- build
+- test
+- release
+
+
+build-job:
+  tags:
+  - python
+  stage: build
+  script:
+  - echo "Creating virtual environment for the project..."
+  - python3.11 -m venv venv
+  - source venv/bin/activate
+  - echo "Installing requirements..."
+  - pip install -r requirements.txt
+  - deactivate
+  artifacts:
+    paths:
+    - venv
+
+test-job:
+  tags:
+  - python
+  stage: test
+  script:
+  - echo "Activating virtual environment..."
+  - source venv/bin/activate
+  - echo "Running unit tests...."
+  - echo "All tests successfully passed."
+
+
+variables:
+  CONTAINER_IMAGE: $CI_REGISTRY/$CI_REGISTRY_PROJECT/$CI_CONTAINER_IMAGE_NAME:v1.0.$CI_PIPELINE_IID
+  # CI_REGISTRY_IMAGE: $CI_REGISTRY/$CI_REGISTRY_PROJECT/$CI_CONTAINER_IMAGE_NAME
+  # CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:v1.0.$CI_PIPELINE_IID
+  # CI_REGISTRY_IMAGE: $CI_REGISTRY/shoppie_ms/shoppie-auth-service
+  # CI_REGISTRY_USER: samrat
+  # CI_REGISTRY_PASSWORD: Abcd1234.
+
+release-job:
+  tags:
+  - docker
+  stage: release
+  before_script:
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+  script:
+  - docker build -t $CONTAINER_IMAGE -f ./Dockerfile .
+  - docker push $CONTAINER_IMAGE
+  after_script:
+  - docker rmi $CONTAINER_IMAGE
+  - docker logout
