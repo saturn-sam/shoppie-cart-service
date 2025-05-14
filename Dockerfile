@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY requirements.txt .
 
-RUN pip install -r requirements.txt --index http://10.2.5.147:8080 --trusted-host 10.2.5.147
+RUN pip install -r requirements.txt
 # Stage 2: Final stage
 FROM dhub.pubalibankbd.com/python/python:3.11-slim-nc
 
